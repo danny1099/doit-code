@@ -1,0 +1,274 @@
+{
+  "name": "doit-code",
+  "displayName": "Doit Code",
+  "description": "Keep your TODOs organized and never lose track of important tasks again.",
+  "version": "1.0.0",
+  "publisher": "Danny Alexander Mosquera",
+  "icon": "app-logo.png",
+  "license": "MIT",
+  "keywords": [
+    "todo",
+    "tasks",
+    "productivity",
+    "doit"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danny1099/doit-code"
+  },
+  "bugs": {
+    "url": "https://github.com/danny1099/doit-code/issues"
+  },
+  "homepage": "https://github.com/danny1099/doit-code#readme",
+  "engines": {
+    "vscode": "^1.104.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "doit.addTask",
+        "title": "New Task",
+        "icon": "$(add)"
+      },
+      {
+        "command": "doit.editTask",
+        "title": "Delete Task",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "doit.deleteTask",
+        "title": "Delete Task",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "doit.pendingTask",
+        "title": "Toggle Task",
+        "icon": "$(check)"
+      },
+      {
+        "command": "doit.completeTask",
+        "title": "Toggle Task",
+        "icon": "$(check)"
+      },
+      {
+        "command": "doit.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "doit.openTaskFile",
+        "title": "Open task in File",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "doit.rescanWorkspace",
+        "title": "Rescan files for tasks",
+        "icon": "$(search)"
+      },
+      {
+        "command": "doit.configureExclusions",
+        "title": "Configure Exclusions",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "doit.reset",
+        "title": "Reset Task List",
+        "icon": "$(layers-dot)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "doit-code",
+          "title": "Doit Code",
+          "icon": "resources/doit-logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "doit-code": [
+        {
+          "id": "doit-code-pending",
+          "name": "Task | Pending",
+          "icon": "resources/icon-pending.svg"
+        },
+        {
+          "id": "doit-code-completed",
+          "name": "Task | Completed",
+          "icon": "resources/icon-check.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "doit.addTask",
+          "when": "view == doit-code-pending",
+          "group": "navigation@1"
+        },
+        {
+          "command": "doit.refresh",
+          "when": "view == doit-code-pending",
+          "group": "navigation@2"
+        },
+        {
+          "command": "doit.rescanWorkspace",
+          "when": "view == doit-code-pending",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "doit.configureExclusions",
+          "when": "view == doit-code-pending",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "doit.refresh",
+          "when": "view == doit-code-completed",
+          "group": "navigation@3"
+        },
+        {
+          "command": "doit.reset",
+          "when": "view == doit-code-pending",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "doit.pendingTask",
+          "when": "view == doit-code-pending",
+          "group": "inline@1"
+        },
+        {
+          "command": "doit.completeTask",
+          "when": "view == doit-code-completed",
+          "group": "inline@1"
+        },
+        {
+          "command": "doit.editTask",
+          "when": "view == doit-code-pending",
+          "group": "inline@2"
+        },
+        {
+          "command": "doit.deleteTask",
+          "when": "view == doit-code-pending",
+          "group": "inline@3"
+        },
+        {
+          "command": "doit.openTaskFile",
+          "when": "view == doit-code-pending && viewItem == todoItemWithFile",
+          "group": "navigation@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "doit.rescanWorkspace",
+          "when": "true"
+        },
+        {
+          "command": "doit.configureExclusions",
+          "when": "true"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Doit Code",
+      "properties": {
+        "doit.customPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Custom regex patterns for detecting TODOs in comments",
+          "examples": [
+            "^\\s*//\\s*(URGENT):?\\s*(.+)$",
+            "^\\s*#\\s*(REVIEW):?\\s*(.+)$"
+          ]
+        },
+        "doit.excludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Additional patterns to exclude when scanning for TODOs",
+          "examples": [
+            "**/my-custom-folder/**",
+            "**/*.generated.js"
+          ]
+        },
+        "doit.autoScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan files for Tasks made by comments",
+          "examples": [
+            "/*TODO: do something to complete this*/",
+            "//FIXME: do something to fix this"
+          ]
+        },
+        "doit.autoComplete": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically complete Tasks made by comments"
+        },
+        "doit.similarityThreshold": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Similarity threshold text for Task matching (0.0-1.0)"
+        },
+        "doit.scanOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Scan entire workspace for tasks when extension starts"
+        },
+        "doit.maxFileSize": {
+          "type": "number",
+          "default": 1048576,
+          "description": "Maximum file size in bytes to scan for tasks (default: 1MB)"
+        },
+        "doit.onRemovedTask": {
+          "type": "string",
+          "default": "complete",
+          "enum": [
+            "complete",
+            "delete"
+          ],
+          "description": "Action to take when a task is removed from a source file"
+        },
+        "doit.lineNumberTolerance": {
+          "type": "number",
+          "default": 3,
+          "description": "Number of lines to search for tasks in a file"
+        },
+        "doit.validationInterval": {
+          "type": "number",
+          "default": 15000,
+          "description": "Interval in milliseconds to validate tasks from files"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "build": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.104.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
